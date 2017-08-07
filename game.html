@@ -1,0 +1,213 @@
+<html>
+
+	<h2> Quizzle</h2>
+	
+	<div>
+		<select id="difficultySelect"> 
+			<option id="easyOption" value="easy">Easy</option>
+			<option id="difficultOption" value="difficult">Difficult</option>
+		</select>
+	</div>
+	
+	<div>
+		<input type="text" id="userNumber"> <label id="labelScore" > </label>
+	</div>
+	
+	<div>	
+		<button id="guessButton" > Guess</button>
+	</div>
+	
+	<div>
+          <a id="showGreaterHint" href="#" onClick=" showGreaterHint(event,this)"> Is greater than which number ? </a>
+    </div>
+
+    <div>
+        <a id="showLesserHint" href="#" onClick=" showLesserHint(event,this)"> Is less than which number ? </a>
+    </div>
+	
+	<div>
+        <a id="showEvenHint" href="#" onClick="showEvenHint(event,this)">  Is the number Even ? </a>
+    </div>
+	
+	<div>
+        <a id="showMultipleOf5Hint" href="#" onClick="showMultipleOf5Hint(event,this)">  Is Multiple of 5 ? </a>
+    </div>
+	
+	<div>
+        <a id="showMultipleOf7Hint" href="#" onClick="showMultipleOf7Hint(event,this)"> Is Multiple of 7 ? </a>
+    </div>
+	
+	<div>
+        <a id="showPrimeHint" href="#" onClick=" showPrimeHint(event,this)"> Is Number Prime ? </a>
+    </div>
+	
+	<div>
+        <a id="showUnitPlaceHint" href="#" onClick=" showUnitPlaceHint(event,this)"> Show units place ? </a>
+    </div>
+	
+	
+	<!-- JS -->
+	<script>
+	
+		var userNumber;
+		var guessButton;
+		var key;
+		var score = 100;
+		var difficulty = "easy";
+		var greaterDifficultyCounter = 10;
+		var lesserDifficultyCounter = 10;
+		
+		function initialize()
+		{	
+			var guessButton = document.getElementById("guessButton");
+			guessButton.addEventListener("click",checkAnswer);
+			generateRandomNumber();
+			document.getElementById("labelScore").innerHTML  = "Score : " + score;
+		};
+		
+		function generateRandomNumber(event,element)
+		{
+			 key = Math.floor(Math.random() * 100) + 1 ;
+		};
+		
+		function checkDifficulty(){
+			if(document.getElementById("difficultySelect").value == "easy")
+				return "easy";
+			else
+				return "difficult";		
+		};
+		
+		var hintsTemplates = {
+			"greater-hint"    : "Is greater than "
+			, "lesser-hint"     : "Is less than "
+			, "odd-hint"        : "It's Odd"
+			, "even-hint"       : "It's Even "
+			, "prime-hint"       : "Is Prime "
+			, "multiple-5-hint" : "Is Muliple of 5 "
+			, "multiple-7-hint" : "Is Muliple of 7 "
+			, "it-is-not" : "It Isn't."
+			, "unit-place" : "Unit place digit is "		      
+			};
+		
+		function checkAnswer(event)
+		{
+			userNumber =  parseInt(document.getElementById("userNumber").value);		 
+			
+			if(userNumber === key)
+			{
+				alert("Correct !");
+				if(score>0){
+					alert("You Won! Score : " + score);
+					location.reload();
+				}					
+				else{
+					alert("You Lost! Score : " + score);
+					location.reload();
+				}
+					
+			}		
+			else
+			{
+				alert("Try Again !");
+			}
+			console.log("User No :"+userNumber);
+			console.log("Key : "+ key);
+			return false;
+			
+		};
+		
+		function showGreaterHint(event,element)
+		{
+			
+			var hint = Math.floor(Math.random() * greaterDifficultyCounter) + 1;
+			hint = key - hint;
+			hint =  hintsTemplates["greater-hint"] + hint;
+			alert(hint);
+			score -= 10; 
+			document.getElementById("labelScore").innerHTML = "Score : " +  score;
+			if(checkDifficulty()=="easy")
+				greaterDifficultyCounter = 5;
+			else
+				greaterDifficultyCounter += 10;
+				
+			console.log(greaterDifficultyCounter);	
+		};
+		
+		function showLesserHint(event,element)
+		{
+			var hint = Math.floor(Math.random() * lesserDifficultyCounter) + 1;
+			//console.log(hint);
+			hint += key;
+			hint =  hintsTemplates["lesser-hint"] + hint;
+			alert(hint);
+			score -= 10;
+			document.getElementById("labelScore").innerHTML = "Score : " +  score;
+			if(checkDifficulty()=="easy")
+				lesserDifficultyCounter = 5;
+			else
+				lesserDifficultyCounter += 10;
+				
+			console.log(lesserDifficultyCounter);	
+		};
+		
+		function showEvenHint(event,element)
+		{	
+			score -= 10;
+			document.getElementById("labelScore").innerHTML = "Score : " +  score;
+			if(key % 2 == 0 )
+				alert(hintsTemplates["even-hint"]);
+			else
+				alert(hintsTemplates["odd-hint"]);
+				
+		};
+		
+		function showMultipleOf5Hint(event,element)
+		{	
+			score -= 10;
+			document.getElementById("labelScore").innerHTML = "Score : " +  score;
+			if(key % 5 == 0 )
+				alert(hintsTemplates["multiple-5-hint"]);
+			else
+				alert(hintsTemplates["it-is-not"]);
+		};
+		
+		function showMultipleOf7Hint(event,element)
+		{
+			score -= 10;
+			document.getElementById("labelScore").innerHTML = "Score : " +  score;
+			if(key % 7 == 0 )
+				alert(hintsTemplates["multiple-7-hint"]);				
+			else
+				alert(hintsTemplates["it-is-not"]);
+		};
+		
+		function showPrimeHint(event,element)
+		{
+			score -= 10;
+			document.getElementById("labelScore").innerHTML = "Score : " +  score;
+			
+			var flag = key % 2 == 0 || key % 3 == 0 || key % 5 == 0 || key % 7 == 0 ;
+			if(flag == 0)
+				
+				alert(hintsTemplates["prime-hint"]);
+			else 
+				alert(hintsTemplates["it-is-not"]);
+		};
+		
+		function showUnitPlaceHint(event,element)
+		{
+			var hint = key % 10; 
+			hint = hintsTemplates["unit-place"] + hint;
+			alert(hint);
+			score -= 10;
+			document.getElementById("labelScore").innerHTML = "Score : " +  score;
+		};
+		
+		
+		
+		window.onload=initialize;
+		
+	</script>
+	
+</html>
+
